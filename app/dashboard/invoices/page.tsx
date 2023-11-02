@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Invoices = () => {
+const Page = () => {
   return (
     <div>Invoices Page</div>
   )
 }
 
-export default Invoices
+export default Page;
