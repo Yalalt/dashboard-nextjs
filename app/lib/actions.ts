@@ -14,14 +14,19 @@ const InvoiceSchema = z.object({
 });
 
 const FormSchema = z.object({
-  id: z.coerce.string(),
+  // id: z.coerce.string(),
+  id: z.string(),
+  customerId: z.string(),
+  amount: z.coerce.number(),
+  status: z.enum(['pending', 'paid']),
   date: z.string(),
 });
 
 // Use  Zod to update the expected types
 const CreateInvoice = InvoiceSchema.omit({ id: true, date: true });
-const UpdateInvoice = InvoiceSchema.omit({ date: true });
-const DeleteInvoice = FormSchema.omit({ date: true, id: true });
+// const UpdateInvoice = InvoiceSchema.omit({ date: true });
+const UpdateInvoice = FormSchema.omit({ id:true, date: true });
+// const DeleteInvoice = FormSchema.omit({ date: true, id: true });
 
 export async function authenticate(
   prevState: string | undefined,
@@ -54,6 +59,7 @@ export async function createInvoice(formData: FormData) {
   const { customerId, amount, status } = validatedCreateInvoice;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
+  
   try {
     await sql`
     INSERT INTO invoices (customer_id, amount, status, date) VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
