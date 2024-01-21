@@ -20,8 +20,7 @@ const FormSchema = z.object({
   customerId: z.string({
     invalid_type_error: 'Please select customer',
   }),
-  amount: z.coerce.number()
-  .gt(0, { message: 'Please enter an amount greater than $0' }),
+  amount: z.coerce.number().gt(0, { message: 'Please enter an amount greater than $0' }),
   status: z.enum(['pending', 'paid'], {
     invalid_type_error: 'Please select an invoice status',
   }),
@@ -29,16 +28,13 @@ const FormSchema = z.object({
 });
 
 // Use  Zod to update the expected types
-const CreateInvoice = FormSchema.omit({ id:true, date: true });
-const UpdateInvoice = FormSchema.omit({ id:true, date: true });
+const CreateInvoice = FormSchema.omit({ id: true, date: true });
+const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
+export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {
     await signIn('credentials', Object.fromEntries(formData));
-  } catch (error) {
+  } catch (error: any) {
     if ((error as Error).message.includes('CredentialsSignin')) {
       return 'CredentialSignin';
     }
@@ -53,7 +49,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
     status: formData.get('status'),
   });
 
-  if(!validatedFields.success) {
+  if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Invoice',
@@ -85,7 +81,7 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     status: formData.get('status'),
   });
 
-  if(!validatedFields.success) {
+  if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update Invoice',

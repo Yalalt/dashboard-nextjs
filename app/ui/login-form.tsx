@@ -7,7 +7,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/lib/actions';
 
 export default function LoginForm() {
-  const [code, action] = useFormState(authenticate, undefined);
+  const [errorMessage, action] = useFormState(authenticate, undefined);
 
   return (
     <form action={action} className='space-y-3'>
@@ -50,11 +50,11 @@ export default function LoginForm() {
         </div>
         <LoginButton />
         <div className='flex h-8 items-end space-x-1'>
-          {code === 'CredentialSignin' && (
+          {errorMessage === 'CredentialSignin' && (
             <>
               <ExclamationCircleIcon className='h-5 w-5 text-red-500' />
               <p aria-live='polite' className='text-sm text-red-500'>
-                Invalid credentials
+                User email and password do not match
               </p>
             </>
           )}
